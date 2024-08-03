@@ -28,10 +28,10 @@ async def _(event:MessageEvent, args:Message = CommandArg()):
   for index, server in enumerate(serverConfig):
     status, ping = await mcStatus(serverConfig[index])
     if status == "fail":
-      serverQQTemp = Template('${server_name} \n 在线状态: 🔴')
+      serverQQTemp = Template('${server_name} \n 离线: 🔴')
       await ss.send(serverQQTemp.substitute(server_name=server['server_name']))
     else:
-      serverQQTemp = Template('${server_name} \n 在线状态: 🟢 \n 在线人数: ${server_online_people}/${server_max_people} \n 延迟: ${server_ping}ms')
+      serverQQTemp = Template('${server_name} \n 在线: 🟢 \n 在线人数: ${server_online_people}/${server_max_people} \n 延迟: ${server_ping}ms')
       await ss.send(serverQQTemp.substitute(server_name=server['server_name'], server_online_people=status.players.online, server_max_people=status.players.max, server_ping=math.ceil(ping)))
 
 async def mcStatus(serverInfo = {"server_addr": "", "server_type": ""}):
