@@ -8,4 +8,5 @@
 2. `nb create`命令创建一个项目，为了把此项目的代码拖进去
 3. `nb run`运行项目，可以加选项`-r`
 
-项目中已配置好`AppId`、`Token`、`Secert`，**不要配置到dotenv文件中**
+项目中已配置好`AppId`、`Token`、`Secert`，**不要配置到dotenv文件中**  
+QQ机器人相关配置需要到 [QQ开放平台](https://q.qq.com/#/app/bot)
