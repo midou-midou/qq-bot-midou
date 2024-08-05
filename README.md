@@ -9,4 +9,8 @@
 3. `nb run`运行项目，可以加选项`-r`
 
 项目中已配置好`AppId`、`Token`、`Secert`，**不要配置到dotenv文件中**  
-QQ机器人相关配置需要到 [QQ开放平台](https://q.qq.com/#/app/bot)
+QQ机器人相关配置需要到 [QQ开放平台](https://q.qq.com/#/app/bot)  
+
+## 现有功能  
+* Minecraft Java版服务器、基岩版服务器状态查询  
+  + 仅支持查询在线人数、连通性、延迟
