@@ -5,6 +5,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     image: qq-bot-midou
+    container_name: qq-bot-midou
     environment:
       - TZ=Asia/Shanghai
     network_mode: "host"
