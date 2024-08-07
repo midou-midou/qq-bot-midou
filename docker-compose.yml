@@ -1,0 +1,11 @@
+version: "3"
+services:
+  qq-bot-midou:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: qq-bot-midou
+    environment:
+      - TZ=Asia/Shanghai
+    network_mode: "host"
+    restart: always
