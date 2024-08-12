@@ -39,16 +39,15 @@ async def _(event:MessageEvent, args:Message = CommandArg()):
     status, ping = await mcStatus(customConfig[index])
     serverStatus = {
       "server_name": server['server_name'],
-      "server_online_people": status.players.online and None,
-      "server_max_people": status.players.max and None,
-      "server_ping": math.ceil(ping) and None,
-      "server_icon": status.icon and None
+      "server_online_people": status.players.online,
+      "server_max_people": status.players.max,
+      "server_ping": math.ceil(ping),
+      # "server_motd": status.motd.raw.text,
     }
     if status == "fail":
       await ss.send(ping_fail_qq_message_template.substitute(serverStatus))
     else:
       await ss.send(ping_success_qq_message_template.substitute(serverStatus))
-    #   await ss.send(MessageSegment.file_image(serverStatus["server_icon"]))
 
 async def mcStatus(serverInfo = {"server_addr": "", "server_type": ""}):
   if serverInfo["server_type"] == "Java":
