@@ -3,7 +3,7 @@ from nonebot.adapters.qq import Adapter as QQAdapter  # 避免重复命名
 import yaml
 
 # 读取qqbot相关配置
-with open("qqbotsecert.yml",'r', encoding="utf-8") as fp:
+with open("qqbotsecret.yml",'r', encoding="utf-8") as fp:
     get_result= yaml.load(fp.read(),Loader=yaml.SafeLoader)
 
 # 初始化 NoneBot
