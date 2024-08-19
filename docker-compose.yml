@@ -10,6 +10,6 @@ services:
       - TZ=Asia/Shanghai
     network_mode: "host"
     volumes:
-      - /root/qq-bot-midou/qqbotsecert.yml:/qqbotsecert.yml
-      - /root/qq-bot-midou/minecraft_server_status_config.yml:/minecraft_server_status_config.yml
+      - /root/qq-bot-midou/qqbotsecert.yml:/app/qqbotsecert.yml
+      - /root/qq-bot-midou/minecraft_server_status_config.yml:/app/minecraft_server_status_config.yml
     restart: always
