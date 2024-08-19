@@ -30,7 +30,12 @@ config = get_plugin_config(Config)
 with open(path.abspath(path.join(__plugin_meta__.name+"_config.yml")),'r', encoding="utf-8") as fp:
     customConfig= yaml.load(fp.read(),Loader=yaml.SafeLoader)
 
-ping_fail_qq_message_template=Template('\n ${server_name} \n 离线: 🔴')
+ping_fail_qq_message_template=Template('\n ${server_name} \n 离线: 🔴 \n'+
+                                       '------------------------'+
+                                       '${server_reason}'
+                                       '------------------------'+
+                                       '${server_err}'
+                                       )
 ping_success_qq_message_template=Template('\n ${server_name} \n '+
                                           '在线: 🟢 \n '+
                                           '在线人数: ${server_online_people}/${server_max_people} \n '+
@@ -44,8 +49,19 @@ ss = on_command("ss",aliases={"服务器状态", "ss"})
 async def _(event:MessageEvent, args:Message = CommandArg()):
   for index, server in enumerate(customConfig):
     status, ping = await mcStatus(customConfig[index])
-    if status == "fail":
-      await ss.send(ping_fail_qq_message_template.substitute(server))
+    if status["type"] == "unknown_err" or status["type"] == "connect_remote_server_fail":
+      await ss.send(ping_fail_qq_message_template.substitute({
+        "server_name": server['server_name'],
+        "server_reason": status["reason"],
+        "server_err": status["err"]
+      }))
+      return
+    elif status["type"] == "connect_mc_server_fail":
+      await ss.send(ping_fail_qq_message_template.substitute({
+        "server_name": server['server_name'],
+        "server_reason": status["reason"],
+        "server_err": status["err"]
+      }))
     else:
       serverStatus = {
         "server_name": server['server_name'],
@@ -62,8 +78,12 @@ async def mcStatus(serverInfo = {"server_addr": "", "server_type": ""}):
     try:
       server = JavaServer.lookup(serverInfo["server_addr"])
       return server.status(), server.ping()
+    except IOError as e:
+      return {"type": "connect_mc_server_fail", "reason": "mc服可能没有开，联系群管理员@_midou", "err": e}, 0
+    except IOError as e:
+      return {"type": "connect_remote_server_fail", "reason": "mc运行的服务器可能没有开，联系群管理员@_midou", "err": e}, 0
     except Exception as e:
-      return "fail", 0
+      return {"type": "unknown_err", "reason": "服务器错误，联系群管理员@_midou", "err": e}, 0
     
   elif serverInfo["server_type"] == "Bedrock":
     server = BedrockServer.lookup(serverInfo["server_addr"])
