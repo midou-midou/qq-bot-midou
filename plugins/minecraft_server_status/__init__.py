@@ -11,7 +11,7 @@ from nonebot.adapters.qq import Message,MessageEvent,MessageSegment
 from nonebot.params import CommandArg
 
 from mcstatus import JavaServer, BedrockServer
-from dahlia import Dahlia
+# from dahlia import Dahlia, clean
 
 from .config import Config
 
@@ -24,7 +24,7 @@ __plugin_meta__ = PluginMetadata(
 )
 
 config = get_plugin_config(Config)
-motd = Dahlia()
+# motd = Dahlia()
 
 # 自定义配置
 with open(path.abspath(path.join(__plugin_meta__.name+"_config.yml")),'r', encoding="utf-8") as fp:
@@ -34,8 +34,9 @@ ping_fail_qq_message_template=Template('\n ${server_name} \n 离线: 🔴')
 ping_success_qq_message_template=Template('\n ${server_name} \n '+
                                           '在线: 🟢 \n '+
                                           '在线人数: ${server_online_people}/${server_max_people} \n '+
-                                          '详情: ${server_motd} \n'+
-                                          '延迟: ${server_ping}ms')
+                                          '延迟: ${server_ping}ms \n'+
+                                          '------------------------ \n'+
+                                          '${server_motd} \n')
 
 # mc服务器状态 本来服务器就不多，列出所有服务器
 ss = on_command("ss",aliases={"服务器状态", "ss"})
@@ -44,16 +45,17 @@ async def _(event:MessageEvent, args:Message = CommandArg()):
   for index, server in enumerate(customConfig):
     status, ping = await mcStatus(customConfig[index])
     if status == "fail":
-      await ss.send(ping_fail_qq_message_template.substitute(server['server_name']))
-      return
-    serverStatus = {
-      "server_name": server['server_name'],
-      "server_online_people": status.players.online,
-      "server_max_people": status.players.max,
-      "server_ping": math.ceil(ping),
-      "server_motd": motd.convert(status.motd.raw.text),
-    }
-    await ss.send(ping_success_qq_message_template.substitute(serverStatus))
+      await ss.send(ping_fail_qq_message_template.substitute(server))
+    else:
+      serverStatus = {
+        "server_name": server['server_name'],
+        "server_online_people": status.players.online,
+        "server_max_people": status.players.max,
+        "server_ping": math.ceil(ping),
+        # "server_motd": clean(status.motd.raw['text']),
+        "server_motd": status.motd.to_plain(),
+      }
+      await ss.send(ping_success_qq_message_template.substitute(serverStatus))
 
 async def mcStatus(serverInfo = {"server_addr": "", "server_type": ""}):
   if serverInfo["server_type"] == "Java":
