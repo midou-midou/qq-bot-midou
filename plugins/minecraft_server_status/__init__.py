@@ -51,7 +51,7 @@ async def _(event:MessageEvent, args:Message = CommandArg()):
   indies = args.extract_plain_text().split()
   if len(indies) != 1:
     await ss.send(
-      '\n 指令使用错误!!! \n'+
+      '\n指令使用错误!!! \n'+
       '格式: /服务器状态 序号 \n'+
       '例子. '+
       '/服务器状态 1 \n'+
