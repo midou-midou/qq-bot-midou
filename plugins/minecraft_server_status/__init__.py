@@ -74,19 +74,16 @@ async def _(event:MessageEvent, args:Message = CommandArg()):
   server = customConfig[int(indies[0])-1]
   status, ping = await mcStatus(server)
   if ping == 0:
+    serverStatus = {
+      "server_name": server['server_name'],
+      "server_reason": status["reason"],
+      "server_err": status["err"]
+    }
     if status["type"] == "unknown_err" or status["type"] == "connect_remote_server_fail":
-      await ss.send(ping_fail_qq_message_template.substitute({
-        "server_name": server['server_name'],
-        "server_reason": status["reason"],
-        "server_err": status["err"]
-      }))
+      await ss.send(ping_fail_qq_message_template.substitute(serverStatus))
       await ss.finish()
     elif status["type"] == "connect_mc_server_fail":
-      await ss.send(ping_fail_qq_message_template.substitute({
-        "server_name": server['server_name'],
-        "server_reason": status["reason"],
-        "server_err": status["err"]
-      }))
+      await ss.send(ping_fail_qq_message_template.substitute(serverStatus))
   else:
     serverStatus = {
       "server_name": server['server_name'],
